@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:naibrly/utils/app_colors.dart';
 import 'package:naibrly/views/base/AppText/appText.dart';
 import 'package:naibrly/views/base/Ios_effect/iosTapEffect.dart';
@@ -19,6 +20,10 @@ class _BundelsScreenState extends State<BundelsScreen> {
   String selectedCategory = 'All';
   int? expandedIndex;
   bool isLoading = true;
+  
+  // Filter dropdowns
+  String selectedFilter1 = 'Interior';
+  String selectedFilter2 = 'Home...';
 
   @override
   void initState() {
@@ -78,48 +83,77 @@ class _BundelsScreenState extends State<BundelsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header with count
-                  Row(
-                    children: [
-                      AppText(
-                        "${bundles.length} Active Bundles",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey.shade600,
+
+                  Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        width: 0.8,
+                        color: AppColors.textcolor.withOpacity(0.25),
                       ),
-                      const Spacer(),
-                      IosTapEffect(
-                        onTap: () {
-                          // Handle sort action
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: AppColors.primary, width: 1),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              AppText(
-                                "Sort",
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF0E7A60),
-                              ),
-                              SizedBox(width: 4),
-                              Icon(
-                                Icons.sort,
-                                size: 16,
-                                color: Color(0xFF0E7A60),
-                              ),
-                            ],
+                    ),
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: [
+                        SizedBox(width: 10,),
+                        Expanded(
+                          flex: 3,
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              hintText: "Home Repairs",
+                              border: InputBorder.none,
+                              isCollapsed: true,
+                            ),
+                            style: TextStyle(color: AppColors.textcolor),
                           ),
                         ),
-                      ),
-                    ],
+                        Container(
+                          width: 1,
+                          height: 30, // control height of divider line
+                          color: AppColors.textcolor.withOpacity(0.4),
+                          margin: const EdgeInsets.symmetric(horizontal: 8),
+                        ),
+                        SvgPicture.asset("assets/icons/location.svg"),
+                        Expanded(
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+
+                                hintText: "Zip code",
+                                border: InputBorder.none,
+                                isCollapsed: true,
+                                hintStyle: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.black.withOpacity(0.50),
+                                )
+                            ),
+                            style: TextStyle(color: AppColors.textcolor),
+                          ),
+                        ),
+                        Container(
+                          width: 45,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(12),
+                              bottomRight: Radius.circular(12),
+                            ),
+                          ),
+                          child: Center(
+                            child: SvgPicture.asset("assets/icons/search-normal.svg"),
+                          ),
+                        ),
+
+                      ],
+                    ),
                   ),
+
+                  const SizedBox(height: 20),
+
+                  // Filter Section
+                  _buildFilterSection(),
 
                   const SizedBox(height: 20),
 
@@ -193,6 +227,84 @@ class _BundelsScreenState extends State<BundelsScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildFilterSection() {
+    return Row(
+      children: [
+        // Naibrly Bundles text
+        const AppText(
+          "Naibrly Bundles",
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+        
+        const Spacer(),
+        
+        // First dropdown - Interior
+        Container(
+          width: 100, // Fixed width to prevent overflow
+          height: 40,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: selectedFilter1,
+              isDense: true,
+              isExpanded: true,
+              icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: Colors.black),
+              items: const [
+                DropdownMenuItem(value: 'Interior', child: Text('Interior', style: TextStyle(fontSize: 12))),
+                DropdownMenuItem(value: 'Exterior', child: Text('Exterior', style: TextStyle(fontSize: 12))),
+                DropdownMenuItem(value: 'Maintenance', child: Text('Maintenance', style: TextStyle(fontSize: 12))),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  selectedFilter1 = value!;
+                });
+              },
+            ),
+          ),
+        ),
+        
+        const SizedBox(width: 8),
+        
+        // Second dropdown - Home...
+        Container(
+          width: 100, // Fixed width to prevent overflow
+          height: 40,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: selectedFilter2,
+              isDense: true,
+              isExpanded: true,
+              icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: Colors.black),
+              items: const [
+                DropdownMenuItem(value: 'Home...', child: Text('Home...', style: TextStyle(fontSize: 12))),
+                DropdownMenuItem(value: 'Office', child: Text('Office', style: TextStyle(fontSize: 12))),
+                DropdownMenuItem(value: 'Commercial', child: Text('Commercial', style: TextStyle(fontSize: 12))),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  selectedFilter2 = value!;
+                });
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 

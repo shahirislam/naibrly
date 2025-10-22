@@ -19,7 +19,7 @@ class _YourInformationScreenState extends State<YourInformationScreen> {
   String selectedStartTime = "9:00 am";
   String selectedEndTime = "5:00 pm";
   String selectedRole = "Owner";
-  String selectedService = "Home Repairs";
+  String selectedService = "Home Repairs & Maintenance";
 
   @override
   Widget build(BuildContext context) {
@@ -301,9 +301,9 @@ class _YourInformationScreenState extends State<YourInformationScreen> {
                 value: selectedService,
                 hint: const Text("Select services"),
                 items: const [
-                  DropdownMenuItem(value: "Home Repairs", child: Text("Home Repairs")),
-                  DropdownMenuItem(value: "Cleaning", child: Text("Cleaning")),
-                  DropdownMenuItem(value: "Renovations", child: Text("Renovations")),
+                  DropdownMenuItem(value: "Home Repairs & Maintenance", child: Text("Home Repairs & Maintenance")),
+                  DropdownMenuItem(value: "Cleaning & Organization", child: Text("Cleaning & Organization")),
+                  DropdownMenuItem(value: "Renovations & Upgrades", child: Text("Renovations & Upgrades")),
                 ],
                 onChanged: (value) {
                   setState(() {
@@ -313,31 +313,6 @@ class _YourInformationScreenState extends State<YourInformationScreen> {
               ),
             ),
             const SizedBox(height: 8),
-
-            const ServiceTag(
-              text: "Home Repairs & Maintenance",
-              dotColor: Color(0xFFFF7043),
-              textColor: Color(0xFFFF7043),
-              backgroundColor: Color(0xFFFFF0E6),
-            ),
-            SizedBox(height: 8),
-            const ServiceTag(
-              text: "Cleaning & Organization",
-              dotColor: Color(0xFFFFC107),
-              textColor: Color(0xFFFFC107),
-              backgroundColor: Color(0xFFFFF9E5),
-            ),
-            SizedBox(height: 8),
-            const ServiceTag(
-              text: "Renovations & Upgrades",
-              dotColor: Color(0xFFE53935),
-              textColor: Color(0xFFE53935),
-              backgroundColor: Color(0xFFFFEBEE),
-            ),
-
-
-
-            const SizedBox(height: 40),
           ],
         ),
       ),

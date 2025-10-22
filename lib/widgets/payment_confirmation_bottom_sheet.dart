@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:naibrly/utils/app_colors.dart';
 import 'package:naibrly/views/base/AppText/appText.dart';
+import 'package:naibrly/provider/models/order.dart';
+import 'package:naibrly/provider/screens/order_inbox_screen.dart';
 
 class CustomBottomSheet extends StatefulWidget {
   final Widget? topIcon;
@@ -19,6 +21,7 @@ class CustomBottomSheet extends StatefulWidget {
   final Color? secondaryButtonColor;
   final Color? primaryButtonTextColor;
   final Color? secondaryButtonTextColor;
+  final Color? secondaryButtonBorderColor;
   final double? containerHeight;
   final bool showSecondaryButton;
   final bool showRating;
@@ -45,6 +48,7 @@ class CustomBottomSheet extends StatefulWidget {
     this.secondaryButtonColor,
     this.primaryButtonTextColor,
     this.secondaryButtonTextColor,
+    this.secondaryButtonBorderColor,
     this.containerHeight = 350,
     this.showSecondaryButton = true,
     this.showRating = false,
@@ -245,6 +249,9 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                         decoration: BoxDecoration(
                           color: widget.secondaryButtonColor ?? AppColors.black.withValues(alpha: 0.10),
                           borderRadius: BorderRadius.circular(8),
+                          border: widget.secondaryButtonBorderColor != null 
+                            ? Border.all(color: widget.secondaryButtonBorderColor!, width: 0.5)
+                            : null,
                         ),
                         child: TextButton(
                           onPressed: widget.onSecondaryButtonTap ?? () => Navigator.of(context).pop(),
@@ -328,6 +335,7 @@ void showCustomBottomSheet({
   Color? secondaryButtonColor,
   Color? primaryButtonTextColor,
   Color? secondaryButtonTextColor,
+  Color? secondaryButtonBorderColor,
   double? containerHeight,
   bool showSecondaryButton = true,
   bool showRating = false,
@@ -363,6 +371,7 @@ void showCustomBottomSheet({
       secondaryButtonColor: secondaryButtonColor,
       primaryButtonTextColor: primaryButtonTextColor,
       secondaryButtonTextColor: secondaryButtonTextColor,
+      secondaryButtonBorderColor: secondaryButtonBorderColor,
       containerHeight: containerHeight,
       showSecondaryButton: showSecondaryButton,
       showRating: showRating,
@@ -1142,45 +1151,246 @@ void showOrderDetailsBottomSheet(BuildContext context, {required Map<String, dyn
         );
       },
     ),
-    imagePath: "assets/images/Group 1686559613.png",
-    imageHeight: 80,
-    imageWidth: 80,
-    title: "Order Details",
-    description: "View detailed information about this order",
-    primaryButtonText: "Close",
-    showSecondaryButton: false,
+    imagePath: "assets/images/Group 1686559613.png", // Remove the main image
+    imageHeight: 150,
+    imageWidth: 150,
+    title: "", // Empty title since we'll show service name in custom content
+    description: "", // Empty description
+    primaryButtonText: "Accept",
+    secondaryButtonText: "Cancel",
+    secondaryButtonTextColor: const Color(0xFFF34F4F),
+    showSecondaryButton: true,
     showRating: false,
     showFeedback: false,
     primaryButtonColor: const Color(0xFF0E7A60),
+    secondaryButtonColor: const Color(0xFFFEEEEE),
+    secondaryButtonBorderColor: const Color(0xFFFCCBCB),
     containerHeight: 500,
     customContent: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildDetailRow("Order ID", orderData['id'] ?? 'N/A'),
-        _buildDetailRow("Status", orderData['status'] ?? 'N/A'),
-        _buildDetailRow("Customer", orderData['customer'] ?? 'N/A'),
-        _buildDetailRow("Service", orderData['service'] ?? 'N/A'),
-        _buildDetailRow("Amount", '\$${orderData['amount'] ?? '0'}'),
-        _buildDetailRow("Date", orderData['date'] ?? 'N/A'),
-        if (orderData['notes'] != null) ...[
-          const SizedBox(height: 8),
-          AppText(
-            'Notes',
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: AppColors.Black,
-          ),
-          const SizedBox(height: 4),
-          AppText(
-            orderData['notes'],
-            fontSize: 14,
-            color: AppColors.DarkGray,
-          ),
-        ],
+        // Service Header
+        Row(
+          children: [
+            AppText(
+              "${orderData['service'] ?? 'Service'}:",
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppColors.Black,
+            ),
+            const SizedBox(width: 8),
+            AppText(
+              "\$${orderData['amount'] ?? '0'}/hr",
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF0E7A60),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        
+        // Provider Information
+        Row(
+          children: [
+            // Provider Image
+            CircleAvatar(
+              radius: 25,
+              backgroundImage: AssetImage("assets/images/jane.png"), // Default provider image
+              backgroundColor: Colors.grey.shade300,
+            ),
+            const SizedBox(width: 12),
+            // Provider Details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppText(
+                    orderData['customer'] ?? 'Provider Name',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.Black,
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.star,
+                        color: Colors.black,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 4),
+                      AppText(
+                        "5.0 (55 reviews)",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.Black,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        
+        // Address
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppText(
+              "Address:",
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColors.Black,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: AppText(
+                "123 Oak Street Springfield, IL 62704", // Default address
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppColors.DarkGray,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        
+        // Date and Time
+        AppText(
+          "Date: 18 Sep 2025 Time: 14:00", // Default date/time
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: AppColors.DarkGray,
+        ),
+        const SizedBox(height: 16),
+        
+        // Problem Note Section
+        AppText(
+          "Problem Note for ${orderData['service'] ?? 'Service'}",
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: AppColors.Black,
+        ),
+        const SizedBox(height: 8),
+        AppText(
+          orderData['notes'] ?? "The fridge is not cooling properly, making strange noises, freezing food, leaking water, etc.",
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: AppColors.DarkGray,
+        ),
       ],
     ),
     onPrimaryButtonTap: () {
       Navigator.of(context).pop();
+      // Update order status to accepted and navigate to Order Inbox
+      _handleAcceptOrder(context, orderData);
+    },
+    onSecondaryButtonTap: () {
+      Navigator.of(context).pop();
+      // Show cancellation bottom sheet
+      showOrderCancellationBottomSheet(context, orderData: orderData);
+    },
+  );
+}
+
+// Handle Accept Order Logic
+void _handleAcceptOrder(BuildContext context, Map<String, dynamic> orderData) {
+  // TODO: Update order status in your data model/API
+  print("Order accepted: ${orderData['id']}");
+  
+  // Create updated order data with accepted status
+  final updatedOrderData = Map<String, dynamic>.from(orderData);
+  updatedOrderData['status'] = 'accepted';
+  
+  // Navigate to Order Inbox Screen with accepted status
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => OrderInboxScreen(
+        order: _createOrderFromData(updatedOrderData),
+      ),
+    ),
+  );
+}
+
+// Helper function to create Order object from orderData
+Order _createOrderFromData(Map<String, dynamic> orderData) {
+  return Order(
+    id: orderData['id'] ?? '1',
+    serviceName: orderData['service'] ?? 'Service',
+    averagePrice: double.tryParse(orderData['amount']?.toString() ?? '0') ?? 0.0,
+    date: DateTime.now(),
+    time: "14:00",
+    imagePath: "assets/images/repares.png",
+    status: OrderStatus.accepted, // Set to accepted status
+    problemDescription: orderData['notes'] ?? 'Service request',
+    clientName: orderData['customer'] ?? 'Customer',
+    clientImage: "assets/images/jane.png",
+    clientRating: 5.0,
+    clientReviewCount: 55,
+    address: "123 Oak Street Springfield, IL 62704",
+  );
+}
+
+// Order Cancellation Bottom Sheet
+void showOrderCancellationBottomSheet(BuildContext context, {required Map<String, dynamic> orderData}) {
+  showCustomBottomSheet(
+    context: context,
+    topIcon: Image.asset(
+      "assets/images/roundCross.png",
+      width: 48,
+      height: 48,
+      errorBuilder: (context, error, stackTrace) {
+        return const Icon(
+          Icons.check,
+          color: Color(0xFF00CD49),
+          size: 48,
+        );
+      },
+    ),
+    imagePath: "assets/images/cross.png", // Remove the main image
+    title: "Are you sure!",
+    description: "you want to cancel this order?",
+    primaryButtonText: "Cancelled",
+    showSecondaryButton: false,
+    showRating: false,
+    showFeedback: false,
+    primaryButtonColor: const Color(0xFFFF6B6B),
+    containerHeight: 350,
+    customContent: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        AppText(
+          'Note why*',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: AppColors.Black,
+        ),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.white,
+          ),
+          child: const TextField(
+            decoration: InputDecoration(
+              hintText: "Type here",
+              hintStyle: TextStyle(color: Colors.grey),
+              border: InputBorder.none,
+            ),
+            maxLines: 3,
+          ),
+        ),
+      ],
+    ),
+    onPrimaryButtonTap: () {
+      Navigator.of(context).pop();
+      // TODO: Handle order cancellation logic
+      print("Order cancelled: ${orderData['id']}");
     },
   );
 }

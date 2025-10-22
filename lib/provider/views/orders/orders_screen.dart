@@ -5,7 +5,6 @@ import '../../viewmodels/orders_viewmodel.dart';
 import '../../widgets/orders/order_card.dart';
 import '../../widgets/orders/filter_tabs.dart';
 import 'package:naibrly/widgets/payment_confirmation_bottom_sheet.dart';
-import '../../widgets/home/bottom_navigation.dart';
 import '../../widgets/colors.dart';
 import '../../screens/order_inbox_screen.dart';
 
@@ -125,11 +124,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
         orderData: {
           'id': order.id,
           'status': order.status.toString().split('.').last,
-          'customer': order.customerName,
+          'customer': order.clientName,
           'service': order.serviceName,
-          'amount': order.price.toString(),
-          'date': order.createdAt.toString(),
-          'notes': order.description,
+          'amount': order.averagePrice.toString(),
+          'date': order.date.toString(),
+          'notes': order.problemDescription,
         },
       );
     } else if (order.status == OrderStatus.accepted || order.status == OrderStatus.cancelled || order.status == OrderStatus.completed) {

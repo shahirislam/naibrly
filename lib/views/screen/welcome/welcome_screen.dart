@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:naibrly/utils/app_colors.dart';
 import 'package:naibrly/views/screen/auth/login_screen.dart';
 import 'package:naibrly/views/screen/Users/auth/sign_up.dart';
-import 'package:naibrly/provider/provider_main.dart';
 import 'package:naibrly/provider/screens/information_screen.dart';
 import '../../base/AppText/appText.dart';
 import '../../base/Ios_effect/iosTapEffect.dart';
@@ -131,16 +130,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 );
               },
             ),
-            const SizedBox(height: 20),
-            ProviderButton(
-              onTap: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => NairblyApp()),
-                  (Route<dynamic> route) => false,
-                );
-              },
-            ),
+            //const SizedBox(height: 20),
+            // ProviderButton(
+            //   onTap: () {
+            //     Navigator.pushAndRemoveUntil(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => NairblyApp()),
+            //       (Route<dynamic> route) => false,
+            //     );
+            //   },
+            // ),
           ],
         ),
       ),
@@ -322,27 +321,27 @@ class Skip extends StatelessWidget {
   }
 }
 
-class ProviderButton extends StatelessWidget {
-  final VoidCallback onTap;
-
-  const ProviderButton({super.key, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return IosTapEffect(
-      onTap: onTap,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          AppText(
-            "Provider",
-            fontSize: 18,
-            color: AppColors.primary,
-            fontWeight: FontWeight.w600,
-          ),
-          SvgPicture.asset("assets/icons/IC_chevron-right (1).svg"),
-        ],
-      ),
-    );
-  }
-}
+// class ProviderButton extends StatelessWidget {
+//   final VoidCallback onTap;
+//
+//   const ProviderButton({super.key, required this.onTap});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return IosTapEffect(
+//       onTap: onTap,
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           AppText(
+//             "Provider",
+//             fontSize: 18,
+//             color: AppColors.primary,
+//             fontWeight: FontWeight.w600,
+//           ),
+//           SvgPicture.asset("assets/icons/IC_chevron-right (1).svg"),
+//         ],
+//       ),
+//     );
+//   }
+// }
